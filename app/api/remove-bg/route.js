@@ -1,9 +1,7 @@
-/**
- * Cloudflare Pages Function: /api/remove-bg
- * Proxies image to Remove.bg API, keeping the API key server-side.
- */
-export async function onRequestPost(context) {
-  const apiKey = context.env.REMOVE_BG_API_KEY
+export const runtime = 'edge'
+
+export async function POST(request) {
+  const apiKey = process.env.REMOVE_BG_API_KEY
 
   if (!apiKey) {
     return new Response(JSON.stringify({ error: 'API key not configured' }), {
@@ -14,7 +12,7 @@ export async function onRequestPost(context) {
 
   let formData
   try {
-    formData = await context.request.formData()
+    formData = await request.formData()
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid request' }), {
       status: 400,
